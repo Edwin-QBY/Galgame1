@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script src="config.js"></script>
 <title>潮聲戀曲</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+TC:wght@400;500;700;800&display=swap">
@@ -18,7 +19,20 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-o
 #bg{background:center/cover;filter:brightness(.55) saturate(1.05) blur(1.5px)}
 #cg{object-fit:cover;z-index:1}
 #cg.contain{object-fit:contain;background:radial-gradient(#26345f,#0b1020)}
-#spr{position:absolute;z-index:2;bottom:0;right:7%;height:92%;max-width:72%;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))}
+#sprw{position:absolute;z-index:2;bottom:0;right:7%;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))}
+#sprb{position:relative;width:100%;height:100%;transform-origin:50% 100%;animation:breathe 4.2s ease-in-out infinite}
+#spr{display:block;width:100%;height:100%}
+.blush{position:absolute;width:8%;aspect-ratio:1.6;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(255,80,130,.8),rgba(255,80,130,0));opacity:0;transition:opacity .6s;pointer-events:none}
+#sprw.shy .blush{opacity:1}
+.heart{position:absolute;z-index:3;pointer-events:none;animation:floatup 2.3s ease-out forwards;text-shadow:0 0 6px #fff8}
+@keyframes floatup{0%{opacity:0;transform:translateY(0) scale(.5)}15%{opacity:1}100%{opacity:0;transform:translateY(-110px) scale(1.2) rotate(14deg)}}
+@keyframes breathe{50%{transform:scaleY(1.012)}}
+#sprw.hop{animation:hop .95s ease-out}
+@keyframes hop{0%,100%{transform:translateY(0)}20%{transform:translateY(-4.5%) rotate(-1.2deg)}42%{transform:translateY(0)}62%{transform:translateY(-2.5%) rotate(1deg)}82%{transform:translateY(0)}}
+#sprw.shake{animation:shake .6s}
+@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-2.5%) rotate(-1deg)}35%{transform:translateX(2.5%) rotate(1deg)}55%{transform:translateX(-1.8%)}75%{transform:translateX(1.2%)}}
+#heartfill.danger{background:var(--bad);animation:dg .9s infinite}
+@keyframes dg{50%{opacity:.45}}
 #hud{position:absolute;z-index:5;top:0;left:0;right:0;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 12px;background:linear-gradient(#000a,#0000)}
 #chap{font-size:13px;color:var(--mute)}
 #meter{display:flex;align-items:center;gap:8px;min-width:190px}
@@ -70,17 +84,24 @@ h2{font-size:clamp(20px,3.4vw,28px)}
 .ctl output{font-variant-numeric:tabular-nums;text-align:right;font-weight:700}
 .info{font-variant-numeric:tabular-nums;background:#ffffff0a;border-radius:8px;padding:8px 12px}
 .bars{display:grid;gap:8px}
-.bar{display:grid;grid-template-columns:150px 1fr 56px;gap:8px;align-items:center;font-size:13px}
-.bar span{height:8px;border-radius:6px;background:#ffffff22;overflow:hidden}.bar span i{display:block;height:100%;background:var(--good)}
+.bar{display:grid;grid-template-columns:170px 1fr 44px 54px;gap:8px;align-items:center;font-size:13px}
+.bar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}.bar span{height:8px;border-radius:6px;background:#ffffff22;overflow:hidden}.bar span i{display:block;height:100%;background:var(--good)}
 .row{display:flex;gap:10px;flex-wrap:wrap}
-@media(max-width:560px){.ctl{grid-template-columns:1fr 70px}.ctl label{grid-column:1/-1}.bar{grid-template-columns:110px 1fr 48px}#spr{right:0;max-width:100%;height:78%}.hero img{height:170px}#dlg{padding:10px 14px 14px}}
+@media(max-width:560px){.ctl{grid-template-columns:1fr 70px}.ctl label{grid-column:1/-1}.bar{grid-template-columns:112px 1fr 38px 48px}#sprw{right:0}.hero img{height:170px}#dlg{padding:10px 14px 14px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+input[type=text]{flex:1;min-width:150px;font:inherit;color:var(--ink);background:#ffffff10;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.tw{overflow-x:auto}
+.lb{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.lb th,.lb td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+.lb th{color:var(--mute);font-size:12px;font-weight:600}
+.lb tr:nth-child(2) td:first-child,.lb tr:nth-child(3) td:first-child,.lb tr:nth-child(4) td:first-child{color:var(--gold);font-weight:800}
 </style>
 </head>
 <body>
 <div id="stage">
-  <div id="bg"></div><img id="cg" alt="" hidden><img id="spr" alt="" hidden>
-  <div id="hud" hidden><div><div id="who"></div><div id="chap"></div></div><div style="display:flex;gap:10px;align-items:center"><div id="meter" title="好感度 Affection">♥<div id="hearts"><div id="heartfill"></div></div><span id="affn">25</span></div><button class="mini" id="home2" type="button">標題 Title</button></div></div>
+  <div id="bg"></div><img id="cg" alt="" hidden><div id="sprw" hidden><div id="sprb"><img id="spr" alt=""><i class="blush" id="bl1"></i><i class="blush" id="bl2"></i></div></div>
+  <div id="hud" hidden><div><div id="who"></div><div id="chap"></div><div id="clock" class="sub" style="font-size:12px;font-variant-numeric:tabular-nums">⏱ 00:00</div></div><div style="display:flex;gap:10px;align-items:center"><div id="meter" title="好感度 Affection">♥<div id="hearts"><div id="heartfill"></div></div><span id="affn">25</span></div><button class="mini" id="home2" type="button">標題 Title</button></div></div>
   <div id="pop"></div>
   <div id="dlg" hidden><div id="nm"></div><div id="tx"></div><span id="nx">▼</span></div>
   <div id="panel"></div>
@@ -110,7 +131,7 @@ const PROLOGUE = {
     B(`啊！新人！你就是傳說中的轉學生嗎？咕嚕～我是大肥魚！`,`Ah! The new recruit! Are you the legendary transfer student? Blub~ I'm Big Fat Fish!`),
     B(`我最討厭上課了，可是我超喜歡看別人「啊，原來是這樣！」的表情。陪我玩問答遊戲，我就給你好感度～`,`I hate class, but I LOVE the face people make when they go "Oh, so that's how it works!" Play a quiz game with me and I'll give you affection points~`),
     B(`規則很簡單：我問問題，你來答。答對，我就更喜歡你；答錯……我會鼓起臉頰哦！`,`Simple rules: I ask, you answer. Get it right and I like you more. Get it wrong… and I'll puff up my cheeks!`),
-    N(`【提示】答對她的問題會提升好感度，答錯會下降；偷看提示要扣 2 點。好感度會影響劇情與結局。`,`[Tip] Answering her questions well raises affection, wrong answers lower it, and peeking at a hint costs 2 points. Affection changes the story and the ending.`)
+    N(`【提示】答對她的問題會提升好感度，答錯會下降；偷看提示要扣 2 點。好感度會影響劇情與結局，降到 0 就會直接進入壞結局。`,`[Tip] Answering her questions well raises affection, wrong answers lower it, and peeking at a hint costs 2 points. Affection changes the story and the ending, and if it drops to 0 you go straight to a bad ending.`)
   ],
   orange:[
     CG('cg_class'),
@@ -121,7 +142,7 @@ const PROLOGUE = {
     O(`……你就是新來的？別擋著光。`,`…You're the new one? You're blocking my light.`),
     O(`我是大小姐。想讓我正眼看你，就先證明你配得上這個位置。`,`I am Young Lady. If you want me to look at you properly, first prove you deserve to stand there.`,'s'),
     O(`我提問，你回答。答對，我會記住你；答錯……我也會記住。`,`I ask, you answer. Get it right and I will remember you. Get it wrong… and I will remember that too.`),
-    N(`【提示】答對她的問題會提升好感度，答錯會下降，而且大小姐扣得更狠；偷看提示要扣 2 點。`,`[Tip] Answering well raises affection and wrong answers lower it, and Young Lady is much harsher about mistakes. Peeking at a hint costs 2 points.`)
+    N(`【提示】答對她的問題會提升好感度，答錯會下降，而且大小姐扣得更狠；偷看提示要扣 2 點。好感度降到 0 就會直接進入壞結局。`,`[Tip] Answering well raises affection and wrong answers lower it, and Young Lady is much harsher about mistakes. Peeking at a hint costs 2 points. If affection drops to 0 you go straight to a bad ending.`)
   ]
 };
 
@@ -535,7 +556,7 @@ SIMS.circle=host=>{
 /* ===== Visual-novel engine: dialogue, affection, lab, quiz, endings ===== */
 (function(){
 const $=s=>document.querySelector(s);
-const bg=$('#bg'),cg=$('#cg'),spr=$('#spr'),dlg=$('#dlg'),nm=$('#nm'),tx=$('#tx'),panel=$('#panel'),pop=$('#pop'),hud=$('#hud');
+const bg=$('#bg'),cg=$('#cg'),spr=$('#spr'),sprw=$('#sprw'),bl1=$('#bl1'),bl2=$('#bl2'),dlg=$('#dlg'),nm=$('#nm'),tx=$('#tx'),panel=$('#panel'),pop=$('#pop'),hud=$('#hud');
 let S=null,waiting=null,stopSim=null,cgOn=false;
 const IMG=k=>ASSETS[k];
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
@@ -545,12 +566,34 @@ const SAVE='shuli-save-v1',ENDS='shuli-endings-v1';
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
 function setBg(k){bg.style.backgroundImage=`url(${IMG(k)})`}
-function showCG(k){cgOn=true;cg.src=IMG(k);cg.className=k==='carry'?'contain':'';cg.hidden=false;spr.hidden=true;bg.style.filter='brightness(.3)'}
-function hideCG(){cgOn=false;cg.hidden=true;if(S)spr.hidden=false;bg.style.filter=''}
-function setPose(p){const c=CHARS[S.char];spr.src=IMG(c.poses[p]||c.poses.n);if(!cgOn)spr.hidden=false}
+function showCG(k){cgOn=true;cg.src=IMG(k);cg.className=k==='carry'?'contain':'';cg.hidden=false;sprw.hidden=true;bg.style.filter='brightness(.3)'}
+function hideCG(){cgOn=false;cg.hidden=true;if(S)sprw.hidden=false;bg.style.filter=''}
+/* cheek positions (x-left, x-right, y) in % of each sprite, used for the blush effect */
+const FACES={blue_normal:[39,57.5,15],blue_hair:[52.5,65,22.3],blue_angry:[40,58,26],orange_normal:[44.5,55,10.7],orange_sign:[38,52,22.5],orange_swim:[64,75,10.8]};
+let curKey='blue_normal',ar=.5;
+function setPose(p){const c=CHARS[S.char];curKey=c.poses[p]||c.poses.n;spr.src=IMG(curKey);const f=FACES[curKey];bl1.style.left=f[0]+'%';bl2.style.left=f[1]+'%';bl1.style.top=bl2.style.top=f[2]+'%';if(!cgOn)sprw.hidden=false}
+function fit(){const st=$('#stage').getBoundingClientRect(),narrow=st.width<560,h=Math.min(st.height*(narrow?.78:.92),st.width*(narrow?1:.72)/ar);sprw.style.height=h+'px';sprw.style.width=h*ar+'px'}
+spr.onload=()=>{ar=spr.naturalWidth/spr.naturalHeight;fit()};addEventListener('resize',fit);
+/* feedback: happy = blush + floating hearts + hop; unhappy = shake */
+function cheer(ok){
+  if(sprw.hidden)return;const f=FACES[curKey];
+  sprw.classList.remove('hop','shake','shy');void sprw.offsetWidth;
+  if(!ok){sprw.classList.add('shake');setTimeout(()=>sprw.classList.remove('shake'),700);return}
+  sprw.classList.add('hop','shy');setTimeout(()=>sprw.classList.remove('hop'),1000);setTimeout(()=>sprw.classList.remove('shy'),3400);
+  for(let i=0;i<9;i++)setTimeout(()=>{const h=document.createElement('span');h.className='heart';h.textContent='♥';
+    h.style.left=(i%2?f[1]+3+Math.random()*12:f[0]-15+Math.random()*12)+'%';h.style.top=(f[2]-8+Math.random()*12)+'%';h.style.fontSize=(14+Math.random()*16)+'px';h.style.color=['#ff6b9d','#ff9bb8','#ffb3c8','#ff5c8a'][i%4];
+    sprw.appendChild(h);setTimeout(()=>h.remove(),2400)},i*140);
+}
 function showPanel(h){panel.innerHTML=`<div class="in">${h}</div>`;panel.hidden=false;panel.scrollTop=0;dlg.hidden=true}
 function hidePanel(){panel.hidden=true;panel.innerHTML=''}
-function meter(){if(!S)return;$('#heartfill').style.width=S.aff+'%';$('#affn').textContent=S.aff}
+function meter(){if(!S)return;$('#heartfill').style.width=S.aff+'%';$('#heartfill').classList.toggle('danger',S.aff<=10);$('#affn').textContent=S.aff}
+/* game clock: S.el = accumulated ms, running only between clockStart/clockStop */
+const fmt=ms=>{const t=Math.round(ms/1000),h=Math.floor(t/3600),m=Math.floor(t%3600/60),x=t%60;return `${h?h+':':''}${String(m).padStart(2,'0')}:${String(x).padStart(2,'0')}`};
+const nowMs=()=>S?S.el+(S.run?Date.now()-S.last:0):0;
+const clockStart=()=>{S.run=true;S.last=Date.now()};
+const clockStop=()=>{if(S.run){S.el+=Date.now()-S.last;S.run=false}};
+const persist=()=>{if(S&&!S.over)store.set(SAVE,{...S,el:nowMs(),run:false})};
+setInterval(()=>{if(S&&!S.over){const c=$('#clock');if(c)c.textContent='⏱ '+fmt(nowMs())}},250);
 function delta(d){pop.textContent=(d>0?'+':'−')+Math.abs(d)+' ♥';pop.style.color=d>0?'var(--good)':'var(--bad)';pop.classList.remove('show');void pop.offsetWidth;pop.classList.add('show')}
 function addAff(d){S.aff=clamp(S.aff+d);meter();delta(d)}
 
@@ -573,10 +616,27 @@ function advance(){if(waiting){const f=waiting;waiting=null;f()}}
 $('#stage').addEventListener('click',e=>{if(e.target.closest('button,#panel'))return;advance()});
 addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){if(!panel.hidden)return;e.preventDefault();advance()}});
 
+/* leaderboard (Supabase REST; configured by config.js -> window.LBCONF = {url,key}) */
+const LBC=window.LBCONF||{},LBON=!!(LBC.url&&LBC.key);
+const lbHead={apikey:LBC.key,Authorization:'Bearer '+LBC.key,'Content-Type':'application/json'};
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function lbSubmit(row){const r=await fetch(LBC.url+'/rest/v1/scores',{method:'POST',headers:{...lbHead,Prefer:'return=minimal'},body:JSON.stringify(row)});if(!r.ok)throw new Error(r.status)}
+async function lbFetch(){const r=await fetch(LBC.url+'/rest/v1/scores?select=name,hero,score,time_ms&order=score.desc,time_ms.asc&limit=30',{headers:lbHead});if(!r.ok)throw new Error(r.status);return r.json()}
+function leaderboard(back){
+  const head=`<h2>🏆 排行榜 Leaderboard</h2><div class="sub">${bi('分數越高越前面，同分則通關時間越短越前面。','Higher score ranks first; ties are broken by shorter clear time.')}</div>`;
+  const foot=`<div class="row"><button class="btn" id="lbback" type="button">返回 Back</button></div>`;
+  showPanel(head+`<div id="lbbody" class="sub">${LBON?'載入中… Loading…':bi('排行榜尚未啟用。','The leaderboard is not enabled yet.')}</div>`+foot);
+  $('#lbback').onclick=back;
+  if(!LBON)return;
+  lbFetch().then(rows=>{
+    $('#lbbody').innerHTML=rows.length?`<div class="tw"><table class="lb"><tr><th>#</th><th>暱稱 Name</th><th>角色 Heroine</th><th>分數 Score</th><th>時間 Time</th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${r.hero==='blue'?'大肥魚':'大小姐'}</td><td>${r.score}</td><td>${fmt(r.time_ms)}</td></tr>`).join('')}</table></div>`:bi('還沒有人上榜，成為第一個吧！','No entries yet. Be the first!');
+  }).catch(()=>{$('#lbbody').innerHTML=bi('無法連線到排行榜，請稍後再試。','Could not reach the leaderboard. Please try again later.')});
+}
+
 /* title */
 function title(){
   if(stopSim){stopSim();stopSim=null}
-  waiting=null;S=null;hud.hidden=true;spr.hidden=true;hideCG();dlg.hidden=true;setBg('cg_class');
+  waiting=null;if(S){clockStop();persist()}S=null;hud.hidden=true;sprw.hidden=true;hideCG();dlg.hidden=true;setBg('cg_class');
   const sv=store.get(SAVE),ends=store.get(ENDS)||[];
   showPanel(`
    <h1>潮聲戀曲</h1><div class="sub" style="letter-spacing:.2em">TIDEWATER LOVE SONG</div>
@@ -584,20 +644,21 @@ function title(){
    <div class="cards">
     ${['blue','orange'].map(r=>`<button class="hero" data-r="${r}" type="button"><img src="${IMG(CHARS[r].poses.n)}" alt=""><b style="color:${CHARS[r].color}">${CHARS[r].name.zh} · ${CHARS[r].name.en}</b><span class="sub">${r==='blue'?bi('開朗、貪吃的人魚少女。笑起來的時候，尾巴會晃。','A cheerful, snack-loving mermaid girl. Her tail sways when she laughs.'):bi('嚴謹、傲嬌的大小姐。很難取悅，卻很在意你。','A rigorous, tsundere young lady. Hard to please, yet she notices you.')}</span></button>`).join('')}
    </div>
+   <button class="btn" id="lb" type="button">🏆 排行榜 Leaderboard</button>
    ${sv&&sv.char?`<button class="btn pri" id="cont" type="button">繼續 Continue：${CHARS[sv.char].name.zh} ・ ${CHAPTERS[sv.ci].title.zh} / ${CHAPTERS[sv.ci].title.en}（♥ ${sv.aff}）</button>`:''}
    <div class="sub" style="font-size:13px">${bi(`已達成結局：${ends.length} / 8`,`Endings found: ${ends.length} / 8`)}</div>`);
   panel.querySelectorAll('.hero').forEach(b=>b.onclick=()=>newGame(b.dataset.r));
-  const ct=$('#cont');if(ct)ct.onclick=()=>{S=sv;begin(()=>startChapter(S.ci))};
+  $('#lb').onclick=()=>leaderboard(title);const ct=$('#cont');if(ct)ct.onclick=()=>{S=sv;begin(()=>startChapter(S.ci))};
 }
-function begin(cb){hud.hidden=false;hidePanel();meter();$('#who').innerHTML=`<span style="color:${CHARS[S.char].color}">${CHARS[S.char].name.zh} ${CHARS[S.char].name.en}</span>`;setBg('cg_class');cb()}
-function newGame(r){S={char:r,ci:0,aff:CHARS[r].start,hints:0,wrong:0,stats:[]};begin(()=>step(PROLOGUE[r],0,()=>startChapter(0)))}
+function begin(cb){clockStart();hud.hidden=false;hidePanel();meter();$('#who').innerHTML=`<span style="color:${CHARS[S.char].color}">${CHARS[S.char].name.zh} ${CHARS[S.char].name.en}</span>`;setBg('cg_class');cb()}
+function newGame(r){S={char:r,ci:0,aff:CHARS[r].start,hints:0,wrong:0,stats:[],el:0,run:false,last:0,chStart:0,over:false};begin(()=>step(PROLOGUE[r],0,()=>startChapter(0)))}
 
 /* chapter */
 function startChapter(ci){
-  S.ci=ci;store.set(SAVE,S);const ch=CHAPTERS[ci];hideCG();setBg(ch.bg);spr.hidden=true;dlg.hidden=true;
+  S.ci=ci;persist();const ch=CHAPTERS[ci];hideCG();setBg(ch.bg);sprw.hidden=true;dlg.hidden=true;
   $('#chap').innerHTML=`${ch.short.zh} ${ch.short.en} ・ ${ci+1}/${CHAPTERS.length}`;
   showPanel(`<div class="sub">CHAPTER ${ci+1}</div><h2>${ch.title.zh}</h2><h2 style="font-weight:500;color:var(--mute)">${ch.title.en}</h2>${bi(ch.hook.zh,ch.hook.en)}<button class="btn pri" id="go" type="button">開始 Start</button>`);
-  $('#go').onclick=()=>{hidePanel();setPose('n');step(ch.intro(S.char,S),0,()=>lab(ch))};
+  $('#go').onclick=()=>{S.chStart=nowMs();hidePanel();setPose('n');step(ch.intro(S.char,S),0,()=>lab(ch))};
 }
 function lab(ch){
   showPanel(`<h2>與她一起看看 Look Together</h2><div id="sim" class="in" style="max-width:none;padding:0"></div><div class="info">👀 ${bi(ch.lab.zh,ch.lab.en)}</div><button class="btn pri" id="go" type="button">回應她 Answer Her</button>`);
@@ -625,35 +686,52 @@ function quiz(ch,qi,sc){
     const c=CHARS[r];if(ok){sc.ok++;S.aff=clamp(S.aff+c.win)}else{S.wrong++;S.aff=clamp(S.aff-c.lose)}meter();
     $('#fb').innerHTML=`<div class="badge ${ok?'ok':'no'}">${ok?'✔ 正確 Correct':'✘ 錯誤 Wrong'}</div><div class="ex">${bi(q.ex.zh,q.ex.en)}</div><button class="btn pri" id="nx2" type="button">繼續 Continue</button>`;
     $('#fb').scrollIntoView({block:'nearest'});
-    $('#nx2').onclick=()=>{hidePanel();spr.hidden=cgOn;const line=rnd(REACT[r][ok?'ok':'ng']);delta(ok?c.win:-c.lose);
-      step([[r,line[0],line[1],ok?(r==='blue'?'h':'n'):(r==='blue'?'a':'s')]],0,()=>quiz(ch,qi+1,sc))};
+    $('#nx2').onclick=()=>{hidePanel();sprw.hidden=cgOn;const line=rnd(REACT[r][ok?'ok':'ng']);delta(ok?c.win:-c.lose);
+      step([[r,line[0],line[1],ok?(r==='blue'?'h':'n'):(r==='blue'?'a':'s')]],0,()=>S.aff<=0?ending(true):quiz(ch,qi+1,sc));cheer(ok)};
   });
 }
 function finish(ch,sc){
   const p=sc.ok/ch.qs.length,tier=p>=.8?'high':p>=.5?'mid':'low';
-  S.stats.push({id:ch.short,ok:sc.ok,total:ch.qs.length});store.set(SAVE,S);
+  S.stats.push({id:ch.short,ok:sc.ok,total:ch.qs.length,time:nowMs()-S.chStart});persist();if(tier==='high')setTimeout(()=>cheer(true),400);
   const items=rnd(OUTRO[S.char][tier]);
   step([['nar',`本章回應：${sc.ok} / ${ch.qs.length}`,`Replies this chapter: ${sc.ok} / ${ch.qs.length}`],...items],0,()=>{S.ci<CHAPTERS.length-1?startChapter(S.ci+1):ending()});
 }
 
 /* endings */
-function ending(){
-  const key=(S.wrong===0&&S.hints===0)?'true':S.aff>=70?'good':S.aff>=40?'mid':'low';
+function ending(forced){
+  clockStop();S.over=true;const total=S.el;
+  const key=forced?'low':(S.wrong===0&&S.hints===0)?'true':S.aff>=70?'good':S.aff>=40?'mid':'low';
   const E=ENDINGS[S.char][key],ends=store.get(ENDS)||[],id=S.char+'-'+key;
   if(!ends.includes(id)){ends.push(id);store.set(ENDS,ends)}
   try{localStorage.removeItem(SAVE)}catch(e){}
-  step(E.lines,0,()=>{
-    hideCG();
-    const tot=S.stats.reduce((a,s)=>a+s.total,0),ok=S.stats.reduce((a,s)=>a+s.ok,0);
-    showPanel(`<div class="sub">ENDING</div><h2>${E.title.zh}</h2><h2 style="font-weight:500;color:var(--mute)">${E.title.en}</h2>
-     ${bi(`最終好感度 ♥ ${S.aff} / 100　回應正確 ${ok} / ${tot}　偷看 ${S.hints} 次`,`Final affection ♥ ${S.aff} / 100   Good replies ${ok} / ${tot}   Peeks ${S.hints}`)}
-     <div class="bars">${S.stats.map(s=>`<div class="bar"><b>${s.id.zh} ${s.id.en}</b><span><i style="width:${s.ok/s.total*100}%"></i></span><em>${s.ok}/${s.total}</em></div>`).join('')}</div>
-     <div class="sub">${bi(`已達成結局 ${(store.get(ENDS)||[]).length} / 8。真結局條件：完美回應她的每個問題，而且從不偷看。`,`Endings found ${(store.get(ENDS)||[]).length} / 8. True End: reply perfectly to every question without ever peeking.`)}</div>
-     <div class="row"><button class="btn pri" id="again" type="button">再玩一次 Replay</button><button class="btn" id="home" type="button">回到標題 Title</button></div>`);
-    $('#again').onclick=()=>newGame(S.char);$('#home').onclick=title;
-  });
+  const pre=forced?[['nar','（她的好感度降到了零。故事在這裡提前結束了。）','(Her affection has dropped to zero. The story ends here, early.)']]:[];
+  $('#clock').textContent='⏱ '+fmt(total);
+  const ok=S.stats.reduce((x,y)=>x+y.ok,0),score=Math.max(0,ok*100-S.hints*20+S.aff);
+  step([...pre,...E.lines],0,()=>{hideCG();summary(E,forced,total,score)});
 }
-$('#home2').onclick=()=>{if(S&&S.ci>=0)store.set(SAVE,S);title()};
+function summary(E,forced,total,score){
+    const tot=S.stats.reduce((a,x)=>a+x.total,0),ok=S.stats.reduce((a,x)=>a+x.ok,0);
+    showPanel(`<div class="sub">ENDING</div><h2>${E.title.zh}</h2><h2 style="font-weight:500;color:var(--mute)">${E.title.en}</h2>
+     ${forced?bi('好感度歸零，遊戲提前結束。','Affection hit zero, so the game ended early.'):''}
+     ${bi(`最終好感度 ♥ ${S.aff} / 100　回應正確 ${ok} / ${tot}　偷看 ${S.hints} 次`,`Final affection ♥ ${S.aff} / 100   Good replies ${ok} / ${tot}   Peeks ${S.hints}`)}
+     <div class="bars">${CHAPTERS.map((ch,i)=>{const x=S.stats[i];return `<div class="bar"><b>${ch.short.zh} ${ch.short.en}</b><span><i style="width:${x?x.ok/x.total*100:0}%"></i></span><em>${x?x.ok+'/'+x.total:'—'}</em><em>${x?fmt(x.time):'—'}</em></div>`}).join('')}</div>
+     <h2>⏱ ${bi(`總通關時間 ${fmt(total)}`,`Total time ${fmt(total)}`)}</h2>
+     <h2>★ ${bi(`分數 ${score}`,`Score ${score}`)}</h2>
+     <div class="sub">${bi('分數 = 答對題數 × 100 − 偷看次數 × 20 + 最終好感度。','Score = correct answers × 100 − peeks × 20 + final affection.')}</div>
+     ${forced?`<div class="sub">${bi('提前結束的成績不能上榜。','Runs that end early cannot enter the leaderboard.')}</div>`:(LBON?`<div class="row"><input id="nick" type="text" maxlength="12" placeholder="暱稱 Nickname" aria-label="Nickname"><button class="btn pri" id="sub" type="button">上傳成績 Submit</button></div><div id="substat" class="sub"></div>`:`<div class="sub">${bi('排行榜尚未啟用，成績不會上傳。','The leaderboard is not enabled, so scores are not uploaded.')}</div>`)}
+     <div class="sub">${bi(`已達成結局 ${(store.get(ENDS)||[]).length} / 8。真結局條件：完美回應她的每個問題，而且從不偷看。`,`Endings found ${(store.get(ENDS)||[]).length} / 8. True End: reply perfectly to every question without ever peeking.`)}</div>
+     <div class="row"><button class="btn pri" id="again" type="button">${forced?'重新開始 Restart':'再玩一次 Replay'}</button>${LBON?'<button class="btn" id="lbo" type="button">🏆 排行榜 Leaderboard</button>':''}<button class="btn" id="home" type="button">回到標題 Title</button></div>`);
+    $('#again').onclick=()=>newGame(S.char);$('#home').onclick=title;
+    if(LBON)$('#lbo').onclick=()=>leaderboard(()=>summary(E,forced,total,score));
+    const sub=$('#sub');
+    if(sub){const nick=$('#nick');try{nick.value=localStorage.getItem('shuli-nick')||''}catch(e){}
+      if(S.submitted){sub.disabled=true;$('#substat').textContent='已上傳 Submitted ✔'}
+      sub.onclick=async()=>{const name=nick.value.trim().slice(0,12);if(!name){$('#substat').textContent='請輸入暱稱 Please enter a nickname';return}
+        sub.disabled=true;$('#substat').textContent='上傳中… Uploading…';try{localStorage.setItem('shuli-nick',name)}catch(e){}
+        try{await lbSubmit({name,hero:S.char,score,time_ms:Math.round(total)});S.submitted=true;$('#substat').textContent='已上傳 Submitted ✔'}
+        catch(e){sub.disabled=false;$('#substat').textContent='上傳失敗，請再試一次。 Upload failed, please try again.'}}}
+}
+$('#home2').onclick=()=>title();
 title();
 })();
 </script>
